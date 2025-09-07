@@ -24,11 +24,11 @@ void print_sockaddr_info(struct addrinfo* sockaddr){
 
 int main(int argc, char* argv[]){
 
-    cout << "\n\n\nThe server will run on host: " << argv[1] << ", and transmit from port " << argv[2] << "\n\n\nFull service enpoint:    "<< argv[1] << ":" << argv[2] << "\n\n\n";
 
     char* ipaddress = argv[1];
     char* port = argv[2];
 
+    cout << "\n\n\nThe server will run on host: " << argv[1] << ", and transmit from port " << argv[2] << "\n\n\nFull service enpoint:    "<< argv[1] << ":" << argv[2] << "\n\n\n";
 
     struct addrinfo specs; //for setting up the specs of the socket
     struct addrinfo *adress_list;  // will receive linked list of IP-adresses by getaddrinfo    
@@ -36,18 +36,11 @@ int main(int argc, char* argv[]){
     int return_variable;
     struct addrinfo* ip_adress_candidate;
 
-
-    memset(&specs,0,sizeof(struct addrinfo));
+    memset(&specs,0,sizeof(struct addrinfo)); //clean content of socket specs before setting socket config.
 
     specs.ai_family = AF_UNSPEC; // both IPV 4 and IPV 6
     specs.ai_socktype = SOCK_STREAM; //supports bidirectional stream communication
     specs.ai_protocol = 0; // any protocol
-
-
-    print_sockaddr_info(&specs);
-
-    // int socket_fd = socket(specs.ai_family, specs.ai_socktype, specs.ai_protocol);
-
 
     return_variable = getaddrinfo(ipaddress, port, &specs, &adress_list); //Extract candidate tuples ip-address:port before binding.
     if(return_variable!=0){
@@ -55,8 +48,7 @@ int main(int argc, char* argv[]){
         exit(1);
     }
 
-    //iterate over candidates until a port is found
-
+    //iterate over candidates until a valid adress-port allocation is found
     for(ip_adress_candidate=adress_list; ip_adress_candidate!=NULL; ip_adress_candidate=ip_adress_candidate->ai_next){
         cout << "\n\n\naddress: " << ip_adress_candidate->ai_addr;
         int socket_fd = socket(ip_adress_candidate->ai_family, ip_adress_candidate->ai_socktype, ip_adress_candidate->ai_protocol);
@@ -72,6 +64,7 @@ int main(int argc, char* argv[]){
                 if(accept_return<0){
                     cout << "\n\n\naccept failed!\n\n\n";
                 }
+                //server is listening now
         }
     }
 
