@@ -11,7 +11,6 @@
 
 using namespace std;
 
-
 void print_sockaddr_info(struct addrinfo* sockaddr){
     cout << "\n\n\naddrinfo:\n\n\n";
     cout << "\n\n\nprotocol family:"<< sockaddr->ai_family <<"\n\n\n";
@@ -19,7 +18,6 @@ void print_sockaddr_info(struct addrinfo* sockaddr){
     cout << "\n\n\nsocktype:" << sockaddr->ai_socktype << "\n\n\n";
     // cout << "\n\n\naddress:" << sockaddr->ai_addr->sa_data << "\n\n\n";
 }
-
 
 
 int main(int argc, char* argv[]){
@@ -67,13 +65,4 @@ int main(int argc, char* argv[]){
                 //server is listening now
         }
     }
-
-
-
-
-
-
-
-
-
 }
