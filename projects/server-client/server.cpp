@@ -41,11 +41,7 @@ int main(int argc, char* argv[]){
 
     specs.ai_family = AF_UNSPEC; // both IPV 4 and IPV 6
     specs.ai_socktype = SOCK_STREAM; //supports bidirectional stream communication
-    specs.ai_flags = AI_PASSIVE;
-    specs.ai_canonname = NULL;
     specs.ai_protocol = 0; // any protocol
-    specs.ai_addr = NULL; // any protocol
-    specs.ai_next = NULL; // any protocol
 
 
     print_sockaddr_info(&specs);
