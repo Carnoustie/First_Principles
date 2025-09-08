@@ -32,11 +32,17 @@ int main(int argc, char* argv[]){
     //iterate over possible adresses until success
     for(candidate_adress=addr_list; candidate_adress!=NULL; candidate_adress=candidate_adress->ai_next){
         sock_fd = socket(candidate_adress->ai_family, candidate_adress->ai_socktype, candidate_adress->ai_protocol);
-        int bindResult = bind(sock_fd, candidate_adress->ai_addr, candidate_adress->ai_addrlen);
-        cout << "\n\nbindres:" << bindResult;
+        //int bindResult = bind(sock_fd, candidate_adress->ai_addr, candidate_adress->ai_addrlen);
+        //cout << "\n\nbindres:" << bindResult;
         int connectresult = connect(sock_fd, candidate_adress->ai_addr, candidate_adress->ai_addrlen);
-        cout << "\n\nconnectresult: " << connectresult << "\n\n";
-        //cout << "\n\nconnected to address: " << *candidate_adress->ai_addr->sin_addr;
+        
+        if(connectresult==0){
+            char host[NI_MAXHOST], service[NI_MAXHOST];
+            int getnamereturn = getnameinfo(candidate_adress->ai_addr, candidate_adress->ai_addrlen, host, NI_MAXHOST, service, NI_MAXHOST,NI_NUMERICHOST);
+            printf("\n\nConnected to server on <ip-address>:<port> :   %s:%s\n\n", host, service);
+        }
+        
+
     }
 
     //write message to server

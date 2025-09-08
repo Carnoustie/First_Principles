@@ -68,11 +68,11 @@ int main(int argc, char* argv[]){
                 }
 
                 cout << "connected!!!\n\n";
-                //cout << "serveradress; " << ip_adress_candidate->ai_addr;
-            
-                //server is listening now
+                char host[NI_MAXHOST], service[NI_MAXHOST];
+                int getnamereturn = getnameinfo(ip_adress_candidate->ai_addr, ip_adress_candidate->ai_addrlen, host, NI_MAXHOST, service, NI_MAXHOST,NI_NUMERICHOST);
+                printf("server runs on <ip-adress>:<port> :   %s:%s", host, service);
                 read(accept_return,buff,3);
-                cout << buff << "\n\n";
+                cout << "\n\nClient sent the following message:   " << buff << "\n\n";
         }
     }
 }
