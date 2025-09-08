@@ -14,33 +14,31 @@ using namespace std;
 
 
 int main(int argc, char* argv[]){
-    struct addrinfo specs, *addr_list, *candidate_adress;
+    struct addrinfo specs, *addr_list, *candidate_adress; //allocate addrinfo structs
     
-    cout << "hit";
-    char *port = argv[1];
+    char *server_adress = argv[1]; // specify server ip adress to call
+    char *port = argv[2]; // specify server port to call to
 
-
-    memset(&specs, 0, sizeof(struct addrinfo));
-
-    cout << "hit";
-    specs.ai_family = AF_INET;
-    specs.ai_socktype = SOCK_STREAM;
-    specs.ai_protocol = 0;
-
-    cout << "hit";
-    int gai_return = getaddrinfo(NULL, port, &specs, &addr_list);
+    memset(&specs, 0, sizeof(struct addrinfo)); // zero out spec struct
     
-    cout << "gai_return: " << gai_return << "\n\n";
+    specs.ai_family = AF_INET; // IPv4
+    specs.ai_socktype = SOCK_STREAM; // bidirectional data stream
+    specs.ai_protocol = 0; // any protocol
 
+    int gai_return = getaddrinfo(argv[1], argv[2], &specs, &addr_list);  // get linked list of possible adress candidates
+
+    int sock_fd; // allocate here to enable reuse when writing data to server
+                 
+    //iterate over possible adresses until success
     for(candidate_adress=addr_list; candidate_adress!=NULL; candidate_adress=candidate_adress->ai_next){
-        int sock_fd = socket(candidate_adress->ai_family, candidate_adress->ai_socktype, candidate_adress->ai_protocol);
+        sock_fd = socket(candidate_adress->ai_family, candidate_adress->ai_socktype, candidate_adress->ai_protocol);
         int bindResult = bind(sock_fd, candidate_adress->ai_addr, candidate_adress->ai_addrlen);
         cout << "\n\nbindres:" << bindResult;
-        if(bindResult==0){
-            int connectresult = connect(sock_fd, candidate_adress->ai_addr, candidate_adress->ai_addrlen);
-            cout << "\n\nconnectresult: " << connectresult << "\n\n";
-        }
+        int connectresult = connect(sock_fd, candidate_adress->ai_addr, candidate_adress->ai_addrlen);
+        cout << "\n\nconnectresult: " << connectresult << "\n\n";
+        //cout << "\n\nconnected to address: " << *candidate_adress->ai_addr->sin_addr;
     }
 
-//    int sock_fd = socket(, int __type, int __protocol);
+    //write message to server
+    write(sock_fd, "hej", 3);
 }
