@@ -110,12 +110,33 @@ int main(int argc, char* argv[]){
 
         char read_data_buffer[8192];
         ssize_t n_bytes;
+
+        string container;
+
         while( (n_bytes = SSL_read(ssl, read_data_buffer, sizeof(read_data_buffer)-1)) >0){
             read_data_buffer[n_bytes]='\0'; //zero-terminate buffer, else not printable to std-out
-            cout.write(read_data_buffer,n_bytes);
+            container.append(read_data_buffer,n_bytes);
+            //cout.write(read_data_buffer,n_bytes);
             //cout << "hit loop";
         }
 
+        //cout << "output: " << container;
+
+        string finaldata;
+
+        int start = container.find('{');
+        int end = container.find('}');
+        finaldata.append(container.substr(start+1, end-start-1));
+        while(start>0 && end>0){
+            start = container.find('{', end);
+            end = container.find('}', start);
+            if(start>0 && end >0){
+                finaldata.append("\n\n\n\n");
+                finaldata.append(container.substr(start+1, end-start-1));
+            }
+        }
+
+        cout << "\n\n\n\n\n\nfinal output:\n\n\n\n\n\n" << finaldata << "\n\n";
         cout << flush;
     }
 
